@@ -27,7 +27,7 @@ app.post('/signup', async (req, res) => {
     }
 
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM user WHERE email=$1', [email]);
+    const result = await client.query('SELECT * FROM users WHERE email=$1', [email]);
     if (result.rowCount > 0) {
       return res.status(409).json({ message: 'User with this email already exists' });
     }
@@ -36,7 +36,7 @@ app.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const insertResult = await client.query(
-      'INSERT INTO user(lastname, email, password, contact, firstname,company,country,title) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, email, firstname,lastname,country,title,company,contact',
+      'INSERT INTO users(lastname, email, password, contact, firstname,company,country,title) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, email, firstname,lastname,country,title,company,contact',
       [lastname, email, hashedPassword, contact, firstname,company,country,title],
     );
 
@@ -57,7 +57,7 @@ app.post('/login', async (req, res) => {
     }
 
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM user WHERE email = $1', [
+    const result = await client.query('SELECT * FROM users WHERE email = $1', [
       email,
     ]);
 
@@ -95,7 +95,7 @@ const createTable = async () => {
     const client = await pool.connect();
     try {
       await client.query(`
-      CREATE TABLE IF NOT EXISTS user (
+        CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         firstname TEXT NOT NULL,
         lastname TEXT NOT NULL,
