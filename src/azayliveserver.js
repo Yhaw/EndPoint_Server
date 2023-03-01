@@ -21,8 +21,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/signup', async (req, res) => {
   try {
-    const { email, username, password, contact } = req.body;
-    if (!username || !email || !password || !contact) {
+    const { email, firstname,lastname,password, contact, company,title,country  } = req.body;
+        if (!lastname || !email || !password || !contact || !firstname || !company || !title || !country) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -36,8 +36,8 @@ app.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const insertResult = await client.query(
-      'INSERT INTO users(username, email, password, contact) VALUES($1, $2, $3, $4) RETURNING id, email, username, contact',
-      [username, email, hashedPassword, contact],
+      'INSERT INTO users(lastname, email, password, contact, firstname,company,country,title) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, email, firstname,lastname,country,title,company,contact',
+      [lastname, email, hashedPassword, contact, firstname,company,country,title],
     );
 
     const token = jwt.sign({ id: insertResult.rows[0].id }, 'azaykey');
@@ -95,12 +95,16 @@ const createTable = async () => {
     const client = await pool.connect();
     try {
       await client.query(`
-        CREATE TABLE IF NOT EXISTS users (
-          id SERIAL PRIMARY KEY,
-          username TEXT NOT NULL,
-          email TEXT NOT NULL UNIQUE,
-          password TEXT NOT NULL,
-          contact TEXT NOT NULL
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        firstname TEXT NOT NULL,
+        lastname TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        contact TEXT NOT NULL,
+        company TEXT NOT NULL,
+        country TEXT NOT NULL,
+        title TEXT NOT NULL
         )
       `);
       console.log('Table created successfully');
