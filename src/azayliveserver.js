@@ -9,7 +9,7 @@ const app = express();
 const port = 3000;
 
 const config = {
-  connectionString: 'postgres://azay:8H0vRDrfyKk9suxUhPx0GKs6U7sjQwbm@dpg-cfuvstd3t39doav3ufag-a/azay123',
+  connectionString: 'postgres://azay:4o1BHzQsXXYS6lUnmjv6MhWhKTU0upFe@dpg-cgrdrqbk9u56e3m3ie1g-a/azayendpoint',
 };
 
 const pool = new pg.Pool(config);
@@ -86,7 +86,7 @@ app.post('/login', async (req, res) => {
 
 const createTable = async () => {
     const pool = new pg.Pool({
-        connectionString: 'postgres://azay:8H0vRDrfyKk9suxUhPx0GKs6U7sjQwbm@dpg-cfuvstd3t39doav3ufag-a/azay123',
+        connectionString: 'postgres://azay:4o1BHzQsXXYS6lUnmjv6MhWhKTU0upFe@dpg-cgrdrqbk9u56e3m3ie1g-a/azayendpoint',
         ssl: {
         rejectUnauthorized: false,
       },
